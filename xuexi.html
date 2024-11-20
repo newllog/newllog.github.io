@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>限时福利！超值游戏抽奖！！！</title>
+    <!-- 引入外部字体样式（此处以Google Fonts的Roboto字体为例，你可替换为更适合游戏风格的字体） -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 整体页面通用样式 */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('https://example.com/game-background.jpg');
+            /* 替换为游戏风格背景图片链接 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 标题样式 */
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            /* 添加文字阴影效果 */
+        }
+
+        /* 奖品展示区域样式 */
+        .prize-section {
+            background-color: rgba(0, 0, 0, 0.7);
+            /* 半透明黑色背景，凸显内容 */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 80%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            /* 添加盒子阴影效果 */
+        }
+
+        .prize-section p {
+            margin: 10px 0;
+        }
+
+        /* 购买选项区域样式 */
+        .purchase-section {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 80%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .purchase-section button {
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ff6600;
+            /* 橙色按钮背景，符合游戏常见色彩风格 */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+            /* 按钮悬停效果过渡 */
+        }
+
+        .purchase-section button:hover {
+            background-color: #ff8833;
+            /* 悬停时按钮颜色变深 */
+        }
+
+        /* 抽奖区域样式 */
+        .draw-section {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 80%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .draw-section button {
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #00cc66;
+            /* 绿色抽奖按钮，寓意幸运等游戏感觉 */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .draw-section button:hover {
+            background-color: #00ee88;
+            /* 悬停时颜色变化 */
+        }
+
+        /* 剩余次数样式 */
+        .remaining-times {
+            font-size: 24px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 弹出框样式（这里简单设置一下，可根据需求进一步美化） */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 9999;
+        }
+
+        .popup img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #00cc66;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup button:hover {
+            background-color: #00ee88;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>限时福利！超值游戏抽奖！！！</h1>
+    <!-- 奖品展示区域 -->
+    <div class="prize-section">
+        <p>AK47-火麒麟</p>
+        <p>M4A1-雷神</p>
+        <p>AWP-天龙</p>
+        <p>沙鹰-修罗</p>
+        <p>屠龙</p>
+    </div>
+    <!-- 购买选项区域 -->
+    <div class="purchase-section">
+        <button id="buy-10">购买10枚复活币（100元）</button>
+        <button id="buy-5">购买5枚复活币（50元）</button>
+    </div>
+    <!-- 抽奖区域 -->
+    <div class="draw-section">
+        <p>抽奖</p>
+        <span class="remaining-times">剩余次数：<span id="remaining-times">0</span></span>
+        <button id="draw" disabled>抽奖</button>
+    </div>
+
+    <script>
+        // 获取相关DOM元素
+        const buyButton10 = document.getElementById('buy-10');
+        const buyButton5 = document.getElementById('buy-5');
+        const drawButton = document.getElementById('draw');
+        const remainingTimesElement = document.getElementById('remaining-times');
+        let remainingTimes = 0;
+
+        // 购买10枚复活币的点击事件处理函数
+        buyButton10.addEventListener('click', function () {
+            remainingTimes += 10;
+            remainingTimesElement.textContent = remainingTimes;
+            if (remainingTimes > 0) {
+                drawButton.disabled = false;
+            }
+
+            // 弹出微信收款码图片
+            const popup = document.createElement('div');
+            popup.classList.add('popup');
+            const img = document.createElement('img');
+            img.src = '收款码.jpg';
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '关闭';
+            closeButton.addEventListener('click', function () {
+                document.body.removeChild(popup);
+            });
+
+            popup.appendChild(img);
+            popup.appendChild(closeButton);
+            document.body.appendChild(popup);
+        });
+
+        // 购买5枚复活币的点击事件处理函数
+        buyButton5.addEventListener('click', function () {
+            remainingTimes += 5;
+            remainingTimesElement.textContent = remainingTimes;
+            if (remainingTimes > 0) {
+                drawButton.disabled = false;
+            }
+
+            // 弹出微信收款码图片
+            const popup = document.createElement('div');
+            popup.classList.add('popup');
+            const img = document.createElement('img');
+            img.src = '收款码.jpg';
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '关闭';
+            closeButton.addEventListener('click', function () {
+                document.body.removeChild(popup);
+            });
+
+            popup.appendChild(img);
+            popup.appendChild(closeButton);
+            document.body.appendChild(popup);
+        });
+
+        // 抽奖按钮点击事件处理函数
+        drawButton.addEventListener('click', function () {
+            if (remainingTimes > 0) {
+                const prizes = ['AK47-火麒麟', 'M4A1-雷神', 'AWP-天龙', '沙鹰-修罗', '屠龙'];
+                const randomIndex = Math.floor(Math.random() * prizes.length);
+                const wonPrize = prizes[randomIndex];
+                alert('恭喜你，抽中了：' + wonPrize);
+                remainingTimes--;
+                remainingTimesElement.textContent = remainingTimes;
+                if (remainingTimes === 0) {
+                    drawButton.disabled = true;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
